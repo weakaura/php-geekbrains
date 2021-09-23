@@ -2,13 +2,90 @@
 define('TEMPLATES_DIR', 'templates/');
 define('LAYOUTS_DIR', 'layouts/');
 
+$menu = [
+    [
+        'url' => '/',
+        'name' => 'Главная',
+    ],
+    [
+        'url' => '/?page=catalogspa',
+        'name' => 'Каталог spa',
+    ],
+    [
+        'url' => '/?page=catalogssr',
+        'name' => 'Каталог ssr',
+    ],
+    [
+        'url' => '/?page=about',
+        'name' => 'О нас',
+    ],
+    [
+        'url' => '',
+        'name' => 'Задания',
+        'submenu' => [
+            [
+                'url' => '/?page=exercises/ex-1',
+                'name' => 'ex-1',
+            ],
+            [
+                'url' => '/?page=exercises/ex-2',
+                'name' => 'ex-2',
+            ],
+            [
+                'url' => '/?page=exercises/ex-3',
+                'name' => 'ex-3',
+            ],
+            [
+                'url' => '/?page=exercises/ex-4',
+                'name' => 'ex-4',
+            ],
+            [
+                'url' => '/?page=exercises/ex-5',
+                'name' => 'ex-5',
+            ],
+            [
+                'url' => '/?page=exercises/ex-6',
+                'name' => 'ex-6',
+            ],
+            [
+                'url' => '/?page=exercises/ex-7',
+                'name' => 'ex-7',
+            ],
+            [
+                'url' => '/?page=exercises/ex-8',
+                'name' => 'ex-8',
+            ],
+            [
+                'url' => '/?page=exercises/ex-9',
+                'name' => 'ex-9',
+            ],
+        ]
+    ],
+];
+
+
+function renderMenu($menu)
+{
+    $out = "<ul>";
+    foreach ($menu as $value) {
+        $out .= "<li><a href='{$value['url']}'>{$value['name']}</a>";
+        if (isset($value['submenu'])) {
+            $out .= renderMenu($value['submenu']);
+        }
+        $out .= "</li>";
+    }
+    $out .= "</ul>";
+    return $out;
+}
 
 $page = 'index';
 if (isset($_GET['page'])) {
     $page = $_GET['page'];
 }
 
-$params = [];
+$params = [
+    'menu' => $menu
+];
 
 switch ($page) {
     case 'index':
@@ -33,32 +110,10 @@ switch ($page) {
         echo json_encode(getCatalog(), JSON_UNESCAPED_UNICODE);
         die();
 
-    case 'menu_template':
-        $params['menu2'] = getMenu();
 }
 
 echo render($page, $params);
 
-
-
-function getMenu() {
-    ob_start();
-    $newMenu = [
-        '1' => '1',
-        '2' => '2',
-        '3' => '3',
-        '4' => '4',
-        '5' => '5',
-        '6' => '6',
-        '7' => '7',
-        '8' => '8',
-        '9' => '9',
-        ];
-    foreach ($newMenu as $value) {
-    echo "<li><a href='/exercises/ex-{$value}.php'>ex-{$value}</a></li>";
-}
-    return ob_get_clean();
-}
 
 function getCatalog()
 {
@@ -86,7 +141,7 @@ function render($page, $params = [])
 {
     return renderTemplate(LAYOUTS_DIR . 'main', [
             'title' => $params['title'],
-            'menu' => renderTemplate('menu', $params),
+            'menu' => renderMenu($params['menu']),
             'content' => renderTemplate($page, $params)
         ]
     );
