@@ -1,0 +1,23 @@
+body {
+    background-color: aqua;
+}
+.content {
+    width: 90%;
+    display: flex;
+    align-items: center;
+}
+
+
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+}
+.smallPic {
+    width: 150px;
+    height: 100px;
+    padding: 15px;
+}
+
+.smallPic:hover {
+    transform: scale(1.5, 1.5);
+}
